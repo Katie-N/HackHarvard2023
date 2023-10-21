@@ -1,0 +1,8 @@
+These files aren't a replacement for installing the pyvisionsearch package.
+You have to install that package first and then replace __init__.py and ProductSearch.py with these versions.
+Originally,
+1. Google made an API called Vision Product Search
+2. The creator of the AI fashion app made their own helper library (wrapper) to make it easier to work with Google's API
+3. Google deprecated one of the packages that was used in the wrapper library
+4. Someone else migrated the wrapper library to work again
+5. I changed their code to fix the invalid gcs error inside AddReferenceImage
