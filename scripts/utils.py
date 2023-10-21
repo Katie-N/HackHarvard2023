@@ -11,7 +11,7 @@
 #  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  * See the License for the specific language governing permissions and
 #  * limitations under the License.
- 
+
 
 from google.cloud import vision
 from google.cloud.vision import types
@@ -19,8 +19,9 @@ from pyvisionproductsearch import ProductSearch, ProductCategories
 import io
 import os
 
+# These are all of the labels that can be used
 CLOTHING_OBJECT_LABELS = [
-   "Outerwear",
+    "Outerwear",
     "Jacket",
     "Jeans",
     "Shorts",
@@ -67,44 +68,38 @@ CLOTHING_OBJECT_LABELS = [
     "Goggles"
 ]
 
-
-def detectLabels(file_path=None, image_uri=None):
-
+def detectLabels(file_path = None, image_uri = None):
     if bool(file_path) == bool(image_uri):
-        raise Exception(
-            "Must provide one of either a file path or an image uri")
-    
+        raise Exception("Must provide one of either a file path or an image uri")
+
     client = vision.ImageAnnotatorClient()
 
     if file_path:
         with io.open(file_path, 'rb') as image_file:
             content = image_file.read()
-            image = vision.types.Image(content=content)
+            image = vision.types.Image(content = content)
     else:
-        image_source = vision.types.ImageSource(image_uri=image_uri)
-        image = vision.types.Image(source=image_source)
+        image_source = vision.types.ImageSource(image_uri = image_uri)
+        image = vision.types.Image(source = image_source)
 
     # Performs label detection on the image file
-    response = client.label_detection(image=image)
+    response = client.label_detection(image = image)
     return response.label_annotations
 
 
-def detectObjects(file_path=None, image_uri=None):
-
+def detectObjects(file_path = None, image_uri = None):
     if bool(file_path) == bool(image_uri):
-        raise Exception(
-            "Must provide one of either a file path or an image uri")
-    
+        raise Exception("Must provide one of either a file path or an image uri")
+
     client = vision.ImageAnnotatorClient()
 
     if file_path:
         with io.open(file_path, 'rb') as image_file:
             content = image_file.read()
-            image = vision.types.Image(content=content)
+            image = vision.types.Image(content = content)
     else:
-        image_source = vision.types.ImageSource(image_uri=image_uri)
-        image = vision.types.Image(source=image_source)
+        image_source = vision.types.ImageSource(image_uri = image_uri)
+        image = vision.types.Image(source = image_source)
 
     # Performs label detection on the image file
-    return client.object_localization(
-        image=image).localized_object_annotations
+    return client.object_localization(image = image).localized_object_annotations

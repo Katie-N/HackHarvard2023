@@ -12,39 +12,45 @@
 #  * See the License for the specific language governing permissions and
 #  * limitations under the License.
 
- 
-
+# import the wrapper library made by Dale to work with the vision API.
 from pyvisionproductsearch import ProductSearch, ProductCategories
 import os
+# import the load_dotenv function to load in the environment variables
 from dotenv import load_dotenv
 from collections import Counter
 
+# Imports the variables from env.txt
+# This is how these variables get defined:
+# PROJECTID
+# BUCKET
+# CREDS
+# CLOSET_DIR
+# PRODUCT_SET
 load_dotenv()
 
-ps = ProductSearch(os.getenv("PROJECTID"),
-                   os.getenv("CREDS"), os.getenv("BUCKET"))
-
+ps = ProductSearch(os.getenv("PROJECTID"), os.getenv("CREDS"), os.getenv("BUCKET"))
 
 def getLabel(fileName):
     # The label is just the last word in the filename
     return fileName.split("_")[-1].lower()
-
-
+# define the productSet (which is the collection of the user's clothing items)
 try:
     productSet = ps.getProductSet(os.getenv("PRODUCT_SET"))
 except:
     productSet = ps.createProductSet(os.getenv("PRODUCT_SET"))
 
 labels = []
+# Loop through each subfolder (each article of clothing) in the user's closet
+# This is what Dale calls "indexing" the closet
 for folder in os.listdir(os.getenv("CLOSET_DIR")):
 
+    # label is the last word in the folder name
     label = getLabel(folder)
     labels.append(label)
 
     print(f"Creating product {folder}")
 
-    product = ps.createProduct(
-        folder, "apparel", labels={"type": label})
+    product = ps.createProduct(folder, "apparel", labels={"type": label})
 
     imgFolder = os.path.join(os.getenv("CLOSET_DIR"), folder)
 
