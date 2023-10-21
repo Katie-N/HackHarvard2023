@@ -18,7 +18,4 @@ export default {
 </script>
 
 <style scoped>
-header {
-  max-height: 100vh;
-}
 </style>
