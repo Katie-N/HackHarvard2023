@@ -57,8 +57,9 @@ for folder in os.listdir(os.getenv("CLOSET_DIR")):
     for img in os.listdir(imgFolder):
         try:
             product.addReferenceImage(os.path.join(imgFolder, img))
-        except:
+        except Exception as error:
             print(f"Couldn't add reference image {imgFolder}/{img}")
+            print("Error: ", error)
 
     productSet.addProduct(product)
     print(f"Added product {product.displayName} to set")
