@@ -3,3 +3,7 @@ export BUCKET="YOUR_CLOSET_STORAGE_BUCKET"
 export CREDS="path/to/key.json"
 export CLOSET_DIR="PATH_TO_YOUR_LOCAL_CLOSET_IMAGES" (I want to make this dynamic. Let the user select a folder of photos of their articles of clothing.)
 export PRODUCT_SET="PRODUCT_SET_NAME"
+
+export INSPO_BUCKET="BUCKET_WITH_REFERENCE_PICS"
+export INSPO_SUBFOLDER="NAME_OF_SUBFOLDER_CONTAINING_PICS"
+export GOOGLE_APPLICATION_CREDENTIALS="path/to/key.json"
