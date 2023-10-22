@@ -3,9 +3,11 @@
     <!-- Grid of images -->
     <div id="recommendations">
       <div class="square" v-for="match in matches" @click="openMatch(match)">
-        <img :src="match.img.src" :alt="match.img.alt">
+        <img :src="match.img.src">
       </div>
     </div>
+    <!-- <div @click="getMatchesFromFirestore()">Click Me</div> -->
+    <!-- <img src="https://storage.googleapis.com/smartcloset-ef535.appspot.com/inspo/c015b055009057c8e7875276adc787ab.jpg" /> -->
   </main>
 </template>
 
@@ -39,7 +41,15 @@
 </style>
 
 <script>
+import { getDocs, collection } from 'firebase/firestore'
+import { db } from '../firebase/init.js'
+
 export default {
+  // data() {
+  //   return {
+  //     matches: [],
+  //   }
+  // },
   computed: {
     matches: {
       get: function() {
@@ -101,9 +111,20 @@ export default {
     }
   },
   methods: {
-    openMatch(selectedMatch) {
-      console.log("open " + selectedMatch.uid);
-    }
+    // openMatch(selectedMatch) {
+    //   console.log("open " + selectedMatch.uid);
+    // },
+    // async getMatchesFromFirestore() {
+    //   // This retrieves all of the outfits the user is able to wear (all of the matches)
+    //   const docsSnap = await getDocs(collection(db, "users/0000000000000000000/outfitsDEMO"))
+    //
+    //   docsSnap.forEach((doc) => {
+    //     console.log("doc", doc.data()); // "doc1", "doc2" and "doc3"
+    //     this.matches.push(doc.data());
+    //   });
+    //   console.log("in data: ", this.matches);
+    //   console.log(this.matches[0].srcUrl);
+    // },
   },
 }
 </script>
