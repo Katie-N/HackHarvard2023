@@ -181,6 +181,15 @@ def getOutfit(imgUri, verbose=False):
 app = firebase_admin.initialize_app(credentials.Certificate(os.getenv("CREDS")))
 db = firestore.client()
 userid = os.getenv("userid")
+
+doc_ref = db.collection('users').document(userid)
+doc = doc_ref.get()
+if doc.exists:
+    print("User Found")
+else:
+    print("User Not found, creating document")
+    doc_ref.set({"first": "Ada", "last": "Lovelace", "born": 1815})
+
 thisUser = db.collection('users').document(userid)
 
 outfits = thisUser.collection('outfitsDEMO')
