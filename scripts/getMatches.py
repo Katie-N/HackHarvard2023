@@ -2,6 +2,10 @@ from pyvisionproductsearch import ProductSearch, ProductCategories
 from google.cloud import storage, vision
 from google.cloud.vision import types
 
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
 import pandas as pd
 from utils import detectLabels, detectObjects
 import io
@@ -171,4 +175,53 @@ def getOutfit(imgUri, verbose=False):
         print("Algorithm score: %0.3f" % score)
     return (outfit, score)
 
-print(getOutfit(fashion_pics.iloc[0]['uri'], verbose=True))
+# print(getOutfit(fashion_pics.iloc[0]['uri'], verbose=True))
+
+
+app = firebase_admin.initialize_app(credentials.Certificate(os.getenv("CREDS")))
+db = firestore.client()
+userid = os.getenv("userid")
+thisUser = db.collection('users').document(userid)
+
+outfits = thisUser.collection('outfitsDEMO')
+# outfits = outfitsRef.get()
+
+# if (outfits.exists):
+#     print("OutfitsDEMO Exists")
+
+# Go through all of the inspo pics and compute matches.
+for row in fashion_pics.iterrows():
+    srcUrl = row[1]['url']
+    srcUri = row[1]['uri']
+    (outfit, score1) = getOutfit(srcUri, verbose=False)
+
+    # Construct a name for the source image--a key we can use to store it in the database
+    srcId = srcUri[len("gs://"):].replace("/","-")
+
+    # Firestore writes json to the database, so let's construct an object and fill it with data
+    fsMatch = {
+        "srcUrl": srcUrl,
+        "srcUri": srcUri,
+        "score1": score1,
+    }
+    # Go through all of the outfit matches and put them into json that can be
+    # written to firestore
+    theseMatches = []
+    for match in outfit:
+        image = match['image']
+        imgName = match['image'].split('/')[-1]
+        name = match['image'].split('/')[-3]
+        # The storage api makes these images publicly accessible through url
+        imageUrl = f"https://storage.googleapis.com/{os.getenv('BUCKET')}/" + imgName
+        label = match['product'].labels['type']
+        score = match['score']
+
+        theseMatches.append({
+            "score": score,
+            "image": image,
+            "imageUrl": imageUrl,
+            "label": label
+        })
+    fsMatch["matches"] = theseMatches
+    # Add the outfit to firestore!
+    outfits.document(srcId).set(fsMatch)
